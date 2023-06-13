@@ -1,25 +1,7 @@
-import { v4 } from 'uuid'
-
-// Tweets de ejemplo
-const tweets = [
-  {
-    username: "usuario1",
-    content: "Mi primer Tweet.",
-    like: false,
-    date: "10 jun.",
-    id: "1"
-  },
-  {
-    username: "usuario2",
-    content: "Mi primer Tweet.",
-    like: true,
-    date: "11 jun.",
-    id: "2"
-  }
-];
+import tweetsModel from './models/tweetsModels.js';
 
 // Definimos los tipos
-export const typeDefs = `
+export const typeDefs = `#graphql
   type Tweet {
     id: ID!
     username: String!
@@ -32,16 +14,16 @@ export const typeDefs = `
     addTweet(
       username: String!
       content: String!
-      date: String!
-      like: Boolean!
     ): Tweet,
+
     addFavorito(
       id: ID!
-      like: Boolean!
     ): Tweet,
+
     deleteTweet(
       id: ID!
-    ): Tweet,
+    ): Boolean
+
     editTweet(
       id: ID!
       content: String!
@@ -56,44 +38,60 @@ export const typeDefs = `
 // Definimos los resolvers
 export const resolvers = {
   Query: {
-    allTweets: () => tweets
+    allTweets: async () => {
+      try {
+        const tweets = await tweetsModel.getAll();
+        return tweets;
+      } catch (error) {
+        console.log('Hubo un error al obtener los tweets: ', error);
+        throw error;
+      }
+    }
   },
+
   Mutation: {
-    addTweet: (root, args) => {
-      const tweet = {... args, id: v4()}
-      tweets.push(tweet); // Actualizamos la base de datos
-      return tweet
+    addTweet: async (root, { username, content }) => {
+      try {
+        const tweet = await tweetsModel.add(username, content);
+        return tweet;
+      } catch (error) {
+        console.error('Error al crear el tweet: ', error);
+        throw error;
+      }
     },
-    addFavorito: (root, args) => {
-      const tweetIndex = tweets.findIndex(t => t.id === args.id)
-      if (tweetIndex === -1) return null;
 
-      const tweet = tweets[tweetIndex]
-
-      const updatedTweet = {...tweet, like: args.like}
-      tweets[tweetIndex] = updatedTweet
-
-      return updatedTweet
+    addFavorito: async (root, { id }) => {
+      try {
+        const tweet = await tweetsModel.addFavorito(id);
+        return tweet;
+      } catch (error) {
+        console.log('Hubo un error al añadir el favorito: ', error);
+        throw error;
+      }
     },
-    deleteTweet: (root, args) => {
-      const tweetIndex = tweets.findIndex(t => t.id === args.id)
-      if (tweetIndex === -1) return null;
 
-      const tweet = tweets[tweetIndex]
-      tweets.splice(tweetIndex, 1);
-
-      return tweet
+    deleteTweet: async (root, { id }) => {
+      try {
+        const deletedTweet = await tweetsModel.delete(id);
+        if (!deletedTweet) {
+          return false; // Tweet no encontrado
+        }
+        return true; // Tweet encontrado y eliminado con exito
+      } catch (error) {
+        console.log(`Hubo un error al eliminar el tweet con el ID ${id}: `, error);
+        throw error;
+      }
     },
-    editTweet: (root, args) => {
-      const tweetIndex = tweets.findIndex(t => t.id === args.id)
-      if (tweetIndex === -1) return null;
 
-      const tweet = tweets[tweetIndex]
-
-      const updatedTweet = {...tweet, content: args.content}
-      tweets[tweetIndex] = updatedTweet
-
-      return updatedTweet
+    editTweet: async (root, { id, content }) => {
+      try {
+        await tweetsModel.edit(id, content);
+        const tweet = await tweetsModel.getById(id);
+        return tweet;
+      } catch (error) {
+        console.log(`Hubo un error al editar el tweet con el ID ${id}: `, error);
+        throw error;
+      }
     }
   }
 };

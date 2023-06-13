@@ -1,10 +1,8 @@
 import { ApolloServer } from '@apollo/server';
-import { config as dotenvConfig } from 'dotenv';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { typeDefs, resolvers } from './schema.js';
+import { validateConnection } from '../config/connection.js';
 
-// Obtenemos el PORT de las variables de entorno
-dotenvConfig();
 const PORT = process.env.PORT || 3000;
 
 // Función para arrancar el servidor con ApolloServer
@@ -22,4 +20,6 @@ export default async function startServer() {
   });
 
   console.log(`Servidor listo en: ${url}`);
+
+  validateConnection();
 }
