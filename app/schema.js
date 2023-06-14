@@ -1,4 +1,6 @@
 // Tweets de ejemplo
+import {v1 as uuid} from "uuid";
+
 const tweets = [
   {
     username: "manuel",
@@ -39,7 +41,7 @@ export const typeDefs =`
     findTweetUser(username: String!): Tweet
   }
 
-  type Mutations{
+  type Mutation{
     addTweet(
       username: String!
       content: String!
@@ -51,6 +53,7 @@ export const typeDefs =`
 
 // Definimos los resolvers
 export const resolvers = {
+  //Querys (listar todos los tweets, ifo de un solo tweet)
   Query: {
     allTweets: () => tweets,
 
@@ -60,10 +63,13 @@ export const resolvers = {
     }
   },
 
+  // Mutaciones (añadir tweet)
   Mutation: {
     addTweet: (root, arg)=> {
+      // obtenemos los valores de los arg
       const tweet = {...arg, id: uuid()}
+      tweets.push(tweet) // faltaria actualizar la base de datos
+      return tweet
     }
   }
-
 }

@@ -2,7 +2,7 @@ import { ApolloServer } from '@apollo/server';
 import { config as dotenvConfig } from 'dotenv';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { typeDefs, resolvers } from './schema.js';
-import {v1 as uuid} from "uuid";
+
 
 // Obtenemos el PORT de las variables de entorno
 dotenvConfig();
