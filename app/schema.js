@@ -13,6 +13,14 @@ const tweets = [
     like: true,
     date: "11 jun.",
     id: "2"
+  },
+
+  {
+    username: "francisco",
+    content: "Que fuerte el partido de hoy",
+    like: false,
+    date: "15 dic.",
+    id: "3"
   }
 ];
 
@@ -30,6 +38,15 @@ export const typeDefs =`
     allTweets: [Tweet]!
     findTweetUser(username: String!): Tweet
   }
+
+  type Mutations{
+    addTweet(
+      username: String!
+      content: String!
+      date: String!
+      like: Boolean!
+    ): Tweet
+  }
 `;
 
 // Definimos los resolvers
@@ -41,5 +58,12 @@ export const resolvers = {
     const {username} = args
     return tweets.find(tweet => tweet.username == username)
     }
+  },
+
+  Mutation: {
+    addTweet: (root, arg)=> {
+      const tweet = {...arg, id: uuid()}
+    }
   }
+
 }
