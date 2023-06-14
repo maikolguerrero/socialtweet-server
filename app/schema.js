@@ -1,14 +1,14 @@
 // Tweets de ejemplo
 const tweets = [
   {
-    username: "usuario1",
+    username: "manuel",
     content: "Mi primer Tweet.",
     like: false,
     date: "10 jun.",
     id: "1"
   },
   {
-    username: "usuario2",
+    username: "pablo",
     content: "Mi primer Tweet.",
     like: true,
     date: "11 jun.",
@@ -35,6 +35,11 @@ export const typeDefs =`
 // Definimos los resolvers
 export const resolvers = {
   Query: {
-    allTweets: () => tweets
+    allTweets: () => tweets,
+
+    findTweetUser: (root, args)=> {
+    const {username} = args
+    return tweets.find(tweet => tweet.username == username)
+    }
   }
-};
+}
