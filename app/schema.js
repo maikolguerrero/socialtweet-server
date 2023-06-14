@@ -1,5 +1,6 @@
 // Tweets de ejemplo
 import {v1 as uuid} from "uuid";
+import { UserInputError } from 'apollo-server-errors';
 
 const tweets = [
   {
@@ -66,7 +67,13 @@ export const resolvers = {
   // Mutaciones (añadir tweet)
   Mutation: {
     addTweet: (root, arg)=> {
-      // obtenemos los valores de los arg
+      //Realizamos la comprobación para q no se repita un usuario
+      if(tweets.find (t => t.username == arg.username && t.content == arg.content )){
+        throw new UserInputError ("Este usuario ya ah publicado este tweet", {
+          invalidArgs: arg.content
+        })
+      }
+      // Obtenemos los valores de los arg
       const tweet = {...arg, id: uuid()}
       tweets.push(tweet) // faltaria actualizar la base de datos
       return tweet
