@@ -17,7 +17,7 @@ const tweets = [
 ];
 
 // Definimos los tipos
-export const typeDefs = `
+export const typeDefs =`
   type Tweet {
     id: ID!
     username: String!
@@ -28,6 +28,7 @@ export const typeDefs = `
 
   type Query {
     allTweets: [Tweet]!
+    findTweetUser(username: String!): Tweet
   }
 `;
 
