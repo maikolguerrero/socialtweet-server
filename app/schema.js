@@ -32,6 +32,7 @@ export const typeDefs = `#graphql
 
   type Query {
     allTweets: [Tweet]!
+    likedTweets: [Tweet]!
   }
 `;
 
@@ -44,6 +45,16 @@ export const resolvers = {
         return tweets;
       } catch (error) {
         console.log('Hubo un error al obtener los tweets: ', error);
+        throw error;
+      }
+    },
+    
+    likedTweets: async () => {
+      try {
+        const likedTweets = await tweetsModel.getLikedTweets();
+        return likedTweets;
+      } catch (error) {
+        console.log('Hubo un error al obtener los tweets con me gusta: ', error);
         throw error;
       }
     }

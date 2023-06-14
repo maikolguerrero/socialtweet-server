@@ -24,6 +24,17 @@ class TweetsModel {
     }
   }
 
+  async getLikedTweets() {
+    const sql = 'SELECT * FROM tweets WHERE `like` = 1';
+    try {
+      const tweets = await realizarConsulta(sql);
+      return tweets;
+    } catch (error) {
+      console.log('Hubo un error al obtener los tweets con me gusta: ', error);
+      throw error;
+    }
+  }
+
   async add(username, content) {
     const sql = 'INSERT INTO tweets (username, content) VALUES (?, ?)';
     const values = [username, content];
