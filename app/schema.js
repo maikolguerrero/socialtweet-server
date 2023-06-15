@@ -96,6 +96,20 @@ export const resolvers = {
       return tweet
     },
 
+    editTweet: (root, arg)=> {
+      const { username } = arg;
+      // Buscamos el tweet por su indice y comparando el username
+      const tweetIndex = tweets.findIndex(t => t.username == username)
+      // Verificamos que exista
+      if (tweetIndex == -1) {throw new Error("No se encontró el tweet que se quiere editar")}
+        const tweet = tweets[tweetIndex]
+        // MOdificamos el tweet
+        const ubdateTweet = {...tweet, content: arg.content, date: arg.date, like: arg.like}
+        // Remplazamos los valores modificados en el punto que corresponde del array original
+        tweets[tweetIndex] = ubdateTweet
+        return ubdateTweet
+    },
+
 
   }
 }
