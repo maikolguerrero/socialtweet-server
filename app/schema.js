@@ -38,8 +38,8 @@ export const typeDefs =`
   }
 
   type Query {
-    allTweets: [Tweet]!
     findTweetUser(username: String!): Tweet
+    allTweets (like: Boolean): [Tweet]!
   }
 
   type Mutation{
@@ -49,14 +49,31 @@ export const typeDefs =`
       date: String!
       like: Boolean!
     ): Tweet
+
+    editTweet(
+      username: String!
+      content: String!
+      date: String!
+      like: Boolean!
+    ): Tweet
+
+    deleteTweet(
+      username: String!
+    ): Tweet
   }
 `;
 
 // Definimos los resolvers
 export const resolvers = {
-  //Querys (listar todos los tweets, ifo de un solo tweet)
+  //Querys (listar todos los tweets, info de un solo tweet)
   Query: {
-    allTweets: () => tweets,
+    allTweets: (root, arg) => {
+      if (arg.like === undefined) return tweets
+      const bylike = tweet =>
+        arg.like == true ? tweet.like : !tweet.like  
+    
+      return tweets.filter(bylike)
+    },
 
     findTweetUser: (root, args)=> {
     const {username} = args
@@ -77,6 +94,8 @@ export const resolvers = {
       const tweet = {...arg, id: uuid()}
       tweets.push(tweet) // faltaria actualizar la base de datos
       return tweet
-    }
+    },
+
+
   }
 }
