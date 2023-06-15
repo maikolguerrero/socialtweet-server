@@ -18,7 +18,7 @@ Servidor GraphQL para almacenar y administrar tweets de usuarios en una aplicaci
 1. Clona el repositorio: `git clone https://github.com/maikolguerrero/socialtweet-server.git`
 2. Ingresa al directorio del proyecto: `cd socialtweet-server`
 3. Instala las dependencias: `npm install`
-4. Importa la base de datos MySQL.
+4. Importa la base de datos MySQL que se encuentra en la carpeta `db`.
 5. Configura las variables de entorno en un archivo `.env`. Puedes basarte en el archivo `.env.example` proporcionado.
 
 ## Uso
