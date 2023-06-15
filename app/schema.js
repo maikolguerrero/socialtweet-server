@@ -33,6 +33,7 @@ export const typeDefs = `#graphql
   type Query {
     allTweets: [Tweet]!
     likedTweets: [Tweet]!
+    searchTweets(searchTerm: String!): [Tweet]!
   }
 `;
 
@@ -57,7 +58,17 @@ export const resolvers = {
         console.log('Hubo un error al obtener los tweets con me gusta: ', error);
         throw error;
       }
-    }
+    },
+
+    searchTweets: async (root, { searchTerm }) => {
+      try {
+        const tweets = await tweetsModel.searchTweets(searchTerm);
+        return tweets;
+      } catch (error) {
+        console.log('Hubo un error al realizar la búsqueda de tweets : ', error);
+        throw error;
+      }
+    },
   },
 
   Mutation: {

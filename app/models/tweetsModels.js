@@ -87,6 +87,21 @@ class TweetsModel {
       throw error;
     }
   }
+  
+  async searchTweets(searchTerm) {
+    // Consulta al mysql
+    const sql = 'SELECT * FROM tweets WHERE username LIKE ? OR content LIKE ?';
+    const values = [`%${searchTerm}%`, `%${searchTerm}%`];
+    try {
+      // Retornando la info del tweet por el username
+      const tweets = await realizarConsulta(sql, values);
+      return tweets;
+      // Manejo de errores
+    }   catch (error) {
+      console.log('Hubo un error al realizar la búsqueda de tweets: ', error);
+      throw error;
+    }
+}
 
   async edit(id, content) {
     const sql = 'UPDATE tweets SET content = ? WHERE id = ?';
