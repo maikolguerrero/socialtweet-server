@@ -110,6 +110,14 @@ export const resolvers = {
         return ubdateTweet
     },
 
-
+    deleteTweet: (root, arg) => {
+      // Nuestro argumento para la eliminacion sera el username 
+      const { username } = arg;
+      const tweetIndex = tweets.findIndex(t => t.username == username)
+      if (tweetIndex == -1) return null
+      const deletedTweet = tweets[tweetIndex]
+      tweets.splice(tweetIndex, 1)
+      return deletedTweet
+    }
   }
 }
