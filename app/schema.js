@@ -61,6 +61,7 @@ export const resolvers = {
     },
 
     searchTweets: async (root, { searchTerm }) => {
+      if(searchTerm === '') return [];
       try {
         const tweets = await tweetsModel.searchTweets(searchTerm);
         return tweets;
